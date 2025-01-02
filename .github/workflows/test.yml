@@ -1,34 +1,35 @@
-name: test
+name: sample-workflow
 
-on: workflow_dispatch
+on: push
 
 env:
-  FOUNDRY_PROFILE: ci
+  FOUNDRY_PROFILE: dev
 
 jobs:
-  check:
+  build_and_test:
     strategy:
-      fail-fast: true
+      fail-fast: false
 
-    name: Foundry project
-    runs-on: ubuntu-latest
+    name: Foundry Workflow
+    runs-on: ubuntu-20.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v3
         with:
           submodules: recursive
 
       - name: Install Foundry
         uses: foundry-rs/foundry-toolchain@v1
         with:
-          version: nightly
+          version: stable
 
-      - name: Run Forge build
+      - name: Build Project
         run: |
           forge --version
           forge build --sizes
-        id: build
+        id: build_step
 
-      - name: Run Forge tests
+      - name: Execute Tests
         run: |
           forge test -vvv
-        id: test
+        id: test_step
+
